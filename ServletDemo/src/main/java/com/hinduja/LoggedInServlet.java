@@ -2,12 +2,14 @@ package com.hinduja;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class LoggedInServlet
@@ -32,7 +34,13 @@ public class LoggedInServlet extends HttpServlet {
 		PrintWriter pw=response.getWriter();
 		response.setContentType("text/html");
 		
-		pw.println("Login Success!!");
+		HttpSession session=request.getSession();
+		
+		String name=(String)session.getAttribute("name");
+		Date dt=(Date)session.getAttribute("dateLoggedIn");
+		
+		pw.println("Hello "+name);
+		pw.println("<br>You have logged in at"+dt);
 	}
 
 	/**

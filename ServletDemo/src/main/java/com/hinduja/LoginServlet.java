@@ -8,8 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.sql.*;
+import java.util.Date;
 
 /**
  * Servlet implementation class LoginServlet
@@ -32,10 +34,13 @@ public class LoginServlet extends HttpServlet {
 		PrintWriter pw=response.getWriter();
 		response.setContentType("text/html");
 		
+		
+		HttpSession session=request.getSession();
 		String username=request.getParameter("username");
 		String password=request.getParameter("password");
 		String usernameDB="";
 		String passwordDB="";
+		String name="";
 		
 		try {
 			
@@ -51,7 +56,7 @@ public class LoginServlet extends HttpServlet {
 			
 			
 			
-			String query="Select email,password from users where email=? and password=?";
+			String query="Select name,email,password from users where email=? and password=?";
 			PreparedStatement pstmt=con.prepareStatement(query);
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
@@ -61,6 +66,8 @@ public class LoginServlet extends HttpServlet {
 			if(rs.next()) {
 				usernameDB=rs.getString("email");
 				passwordDB=rs.getString("password");
+				name=rs.getString("name");
+				System.out.println(name);
 			}
 			
 			
@@ -68,6 +75,9 @@ public class LoginServlet extends HttpServlet {
 		
 		
 		if(username.equals(usernameDB)&&password.equals(passwordDB)) {
+			
+			session.setAttribute("name",name);
+			session.setAttribute("dateLoggedIn",new Date());
 			
 			response.sendRedirect("LoggedInServlet");
 			
